@@ -39,7 +39,9 @@ class Grid(object):
         neighbor = []
         for cell in self.cells:
             for pos in neighbor_pos:
-                if cell.position[0] == pos[0] and cell.position[1] == pos[1]
+                if cell.position[0] == pos[0] and cell.position[1] == pos[1]:
                     neighbor.append(cell)
+                    cell.cal
         return neighbor
-            
+    def update(self):
+        '''do stuff'''

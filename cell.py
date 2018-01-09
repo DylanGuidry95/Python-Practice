@@ -22,6 +22,7 @@ class Cell(object):
         self.h_score = 0
         self.g_score = 0
         self.position = pos
+        self.parent = None
     def calculate_g_score(self, cell):
         '''Calcualtes the g score of the cell based on the direction it is from the current cell'''
         if cell.position[0] == self.position[0] or cell.position[1] == self.position[1]:
@@ -35,4 +36,20 @@ class Cell(object):
     def calculate_f_score(self):
         '''Calculate the f score of the cell'''
         self.f_score = self.g_score + self.h_score
-        
+    def set_parent(self, cell):
+        if self.parent is None:
+            self.parent = cell
+                if self.position[0] != cell.position[0] && self.position[0] != cell.position[0]
+                    self.g_score = cell.g_score + 14
+                else:
+                    self.g_score = cell.g_score + 10
+        else:
+            newg = 0
+            if self.position[0] != cell.position[0] && self.position[0] != cell.position[0]
+                newg = cell.g_score + 14
+            else:
+                newg = cell.g_score + 10
+            if newg > self.g_score:
+                self.g_score = newg
+                self.parent = cell
+            
