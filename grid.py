@@ -37,11 +37,18 @@ class Grid(object):
     def get_neighbors(self, cell):
         neighbor_pos = ((1,0), (-1,0), (0,1), (0,-1), (1,1), (-1,1), (1,-1), (-1,-1))
         neighbor = []
-        for cell in self.cells:
+        for c in self.cells:
             for pos in neighbor_pos:
-                if cell.position[0] == pos[0] and cell.position[1] == pos[1]:
+                if cell.position[0] == cell.position[0] + pos[0] and cell.position[1] == cell.position[1] + pos[1]:
                     neighbor.append(cell)
-                    cell.cal
+                    cell.set_parent(c)
         return neighbor
     def update(self):
         '''do stuff'''
+        if self.start_cell != None and self.goal_cell != None:
+            current = self.start_cell
+            self.closed_list.append(current)
+            for cell in self.get_neighbors(current):
+                self.open_list.append(cell)
+            
+        
