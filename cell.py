@@ -2,18 +2,19 @@ import sys, pygame
 
 class CellVisual(object):
     '''Visual representation of the cell in the screen space'''
-    def __init__(self, dim, pos, col):
+    def __init__(self, cell, dim, col):
         self.size = dim
-        self.position = pos
+        self.position = cell.position
         self.color = col
         self.surface = pygame.Surface((self.size[0], self.size[1]))
+        self.cellInfo = cell
     def draw(self, screen):
         '''draws the cell to the screen'''
         pygame.draw.rect(screen, self.color,
                          (self.position[0], self.position[1], self.size[0], self.size[1]))
     def change_color(self, col):
         '''Changes the color of the cell'''
-        self.color = col
+        self.color = col    
 
 class Cell(object):
     def __init__(self, pos):
