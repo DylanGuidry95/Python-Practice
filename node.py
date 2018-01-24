@@ -1,4 +1,4 @@
-''' File:Node.py
+''' File: node.py
     Author: Dylan Guidry
     Date: 1/24/2018'''
 class Node(object):
