@@ -1,19 +1,15 @@
-import sys, pygame
-from cell import CellVisual
-pygame.init()
+from a_star import A_Star
+from node import Node
+from graph import Graph
 
-size = width, height = 1080, 720
-speed = [2, 2]
-black = 0, 0, 0
+newGraph = Graph(2,2)
 
-screen = pygame.display.set_mode(size)
+newGraph.generate_nodes()
+newGraph.display_grid()
 
-newCell = CellVisual((25, 25), (width/2,height/2), (255, 0, 0))
 
-while 1:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()    
-    screen.fill(black)
-    newCell.draw(screen)
-    pygame.display.flip()
+algo = A_Star(newGraph)
+
+algo.set_start_node(newGraph.nodes[0])
+algo.set_goal_node(newGraph.nodes[3])
+algo.get_neighbors()
