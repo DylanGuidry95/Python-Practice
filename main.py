@@ -2,14 +2,14 @@ from a_star import A_Star
 from node import Node
 from graph import Graph
 
-newGraph = Graph(2,2)
+NEWGRAPH = Graph(2, 2)
 
-newGraph.generate_nodes()
-newGraph.display_grid()
+NEWGRAPH.generate_nodes()
+NEWGRAPH.display_grid()
 
 
-algo = A_Star(newGraph)
+ALGO = A_Star(NEWGRAPH)
 
-algo.set_start_node(newGraph.nodes[0])
-algo.set_goal_node(newGraph.nodes[3])
-algo.get_neighbors()
+ALGO.set_start_node(NEWGRAPH.nodes[0])
+ALGO.set_goal_node(NEWGRAPH.nodes[3])
+ALGO.get_neighbors()
