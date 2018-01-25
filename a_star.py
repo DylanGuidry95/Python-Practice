@@ -58,11 +58,11 @@ class A_Star(object):
         if self.start_node is None or self.goal_node is None:
             return False
         self.current_node = self.start_node
+        self.open_list.append(self.current_node)
         return True
 
     def update(self):
-        if self.current_node is not self.goal_node:
-            self.open_list.append(self.current_node)
+        if self.current_node is not self.goal_node:     
             neighbors = self.get_neighbors()
             for node in neighbors:
                 node.calculate_g_score(self.current_node)

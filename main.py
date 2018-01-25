@@ -8,9 +8,15 @@ NEWGRAPH.generate_nodes()
 
 ALGO = A_Star(NEWGRAPH)
 
-ALGO.set_start_node(NEWGRAPH.nodes[0])
-ALGO.set_goal_node(NEWGRAPH.nodes[24])
+ALGO.set_start_node(NEWGRAPH.nodes[2])
+ALGO.set_goal_node(NEWGRAPH.nodes[22])
+ALGO.set_wall(NEWGRAPH.nodes[12])
+ALGO.set_wall(NEWGRAPH.nodes[13])
+ALGO.set_wall(NEWGRAPH.nodes[11])
 
-if ALGO.start_up:
+if ALGO.start_up():
     while ALGO.update() is None:
-        print "Algoritm running"
+        a = 1        
+
+for node in ALGO.closed_list:
+    print str(node.position[0]) + "," + str(node.position[1])
