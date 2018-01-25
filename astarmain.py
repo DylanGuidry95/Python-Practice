@@ -15,8 +15,9 @@ ALGO.set_wall(NEWGRAPH.nodes[13])
 ALGO.set_wall(NEWGRAPH.nodes[11])
 
 if ALGO.start_up():
-    while ALGO.update() is None:
-        print "Running"
+    GOAL = ALGO.update()
+    while GOAL is None:
+        GOAL = ALGO.update()
 
 for node in ALGO.closed_list:
     print str(node.position[0]) + "," + str(node.position[1])

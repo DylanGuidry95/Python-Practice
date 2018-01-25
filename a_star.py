@@ -62,20 +62,22 @@ class A_Star(object):
         return True
 
     def update(self):
-        if self.current_node is not self.goal_node:     
+        if self.current_node is not self.goal_node: 
+            self.sort_open_list()    
+            self.current_node = self.open_list[0]
+            self.open_list.remove(self.current_node)
+            self.closed_list.append(self.current_node)
+            if self.goal_node in self.closed_list:
+                return self.closed_list            
             neighbors = self.get_neighbors()
             for node in neighbors:
                 node.calculate_g_score(self.current_node)
                 node.calculate_h_score(self.goal_node)
                 node.calculate_f_score()
-                self.open_list.append(node)
-            self.open_list.remove(self.current_node)
-            self.closed_list.append(self.current_node)
-            self.sort_open_list()
-            self.current_node = self.open_list[0]
-        if self.current_node is self.goal_node:
-            self.closed_list.append(self.current_node)
-            return self.closed_list
+                if node not in self.open_list:
+                    self.open_list.append(node)
+                else:
+                    node.set_parent(self.current_node)        
         return None
 
     def sort_open_list(self):
