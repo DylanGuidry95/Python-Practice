@@ -48,6 +48,36 @@ class A_Star(object):
         for node in self.world.nodes:
             for pos in valid_neighbor:
                 if (self.current_node.position[0] + pos[0] is node.position[0] and
-                        self.current_node.position[1] + pos[1] is node.position[1]):
+                        self.current_node.position[1] + pos[1] is node.position[1] and
+                        node.traversable and
+                        node not in self.closed_list):
                     neighbors.append(node)
         return neighbors
+
+    def start_up(self):
+        if self.start_node is None or self.goal_node is None:
+            return False
+        self.current_node = self.start_node
+        return True
+
+    def update(self):
+        if self.current_node is not self.goal_node:
+            self.open_list.append(self.current_node)
+            neighbors = self.get_neighbors()
+            for node in neighbors:
+                node.calculate_g_score(self.current_node)
+                node.calculate_h_score(self.goal_node)
+                node.calculate_f_score()
+                self.open_list.append(node)
+            self.open_list.remove(self.current_node)
+            self.closed_list.append(self.current_node)
+            self.sort_open_list()
+            self.current_node = self.open_list[0]
+        if self.current_node is self.goal_node:
+            self.closed_list.append(self.current_node)
+            return self.closed_list
+        return None
+
+    def sort_open_list(self):
+        self.open_list.sort(key=lambda node: node.f_score, reverse=False)
+
