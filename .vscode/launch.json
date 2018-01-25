@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
             "name": "Python",
             "type": "python",
@@ -33,7 +34,7 @@
             "type": "python",
             "request": "launch",
             "stopOnEntry": true,
-            "pythonPath": "/users/xxx/bin/python",
+            "pythonPath": "${config:python.pythonPath}",
             "program": "${file}",
             "cwd": "",
             "console": "integratedTerminal",
