@@ -71,7 +71,7 @@ class AStar(object):
             self.open_list.remove(self.current_node)
             self.closed_list.append(self.current_node)
             if self.goal_node in self.closed_list:
-                return self.closed_list
+                return self.goal_node
             neighbors = self.get_neighbors()
             for node in neighbors:
                 node.calculate_g_score(self.current_node)

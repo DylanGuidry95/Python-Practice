@@ -19,5 +19,7 @@ if ALGO.start_up():
     while GOAL is None:
         GOAL = ALGO.update()
 
-for node in ALGO.closed_list:
-    print str(node.position[0]) + "," + str(node.position[1])
+CURRENT = GOAL
+while CURRENT != None:
+    print str(CURRENT.position[0]) + "," + str(CURRENT.position[1])
+    CURRENT = CURRENT.parent
