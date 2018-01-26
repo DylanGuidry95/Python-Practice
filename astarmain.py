@@ -1,4 +1,4 @@
-from a_star import A_Star
+from a_star import AStar
 from node import Node
 from graph import Graph
 
@@ -6,7 +6,7 @@ NEWGRAPH = Graph(5, 5)
 
 NEWGRAPH.generate_nodes()
 
-ALGO = A_Star(NEWGRAPH)
+ALGO = AStar(NEWGRAPH)
 
 ALGO.set_start_node(NEWGRAPH.nodes[2])
 ALGO.set_goal_node(NEWGRAPH.nodes[22])

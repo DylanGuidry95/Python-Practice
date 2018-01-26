@@ -4,7 +4,7 @@
 from graph import Graph
 from node import Node
 
-class A_Star(object):
+class AStar(object):
     '''Creates and object that will perform the A Star pathfinding algorithm'''
     def __init__(self, graph):
         self.world = graph
@@ -55,6 +55,7 @@ class A_Star(object):
         return neighbors
 
     def start_up(self):
+        '''Checks to make sure the start and goal nodes are set up so the algorithm can run'''
         if self.start_node is None or self.goal_node is None:
             return False
         self.current_node = self.start_node
@@ -62,13 +63,15 @@ class A_Star(object):
         return True
 
     def update(self):
-        if self.current_node is not self.goal_node: 
-            self.sort_open_list()    
+        '''A single step of the algorithm. This fucntion should be called everytime we want
+        the algorithm to step through. If the complete condition is met the goal node is returned'''
+        if self.current_node is not self.goal_node:
+            self.sort_open_list()
             self.current_node = self.open_list[0]
             self.open_list.remove(self.current_node)
             self.closed_list.append(self.current_node)
             if self.goal_node in self.closed_list:
-                return self.closed_list            
+                return self.closed_list
             neighbors = self.get_neighbors()
             for node in neighbors:
                 node.calculate_g_score(self.current_node)
@@ -77,9 +80,9 @@ class A_Star(object):
                 if node not in self.open_list:
                     self.open_list.append(node)
                 else:
-                    node.set_parent(self.current_node)        
+                    node.set_parent(self.current_node)
         return None
 
     def sort_open_list(self):
+        '''Sorts the node in the open list by the F Score from least to greatest'''
         self.open_list.sort(key=lambda node: node.f_score, reverse=False)
-
