@@ -73,11 +73,11 @@ class Arc(Shape):
         self.scale = scale
 
     def draw(self):
-        '''Draws text to the screen based on the properties the user declared'''
+        '''Draws a arc to the screen based on the properties the user declared'''
         pygame.draw.arc(self.draw_surface, (self.color[0], self.color[1], self.color[2]),
                         (self.position.x_pos, self.position.y_pos,
                          self.scale[0], self.scale[1]),
-                         self.angles[0], self.angles[1], self.thickness)
+                        self.angles[0], self.angles[1], self.thickness)
 
 class Text(Shape):
     '''Class that will allow the user to draw text to the screen'''
@@ -88,5 +88,6 @@ class Text(Shape):
         self.font = pygame.font.SysFont('arial', self.size)
 
     def draw(self):
+        '''Draws text to the screen based on the properties the user declared'''
         render = self.font.render(self.text, 0, (self.color[0], self.color[1], self.color[2]))
         self.draw_surface.blit(render, (self.position.x_pos, self.position.y_pos))
