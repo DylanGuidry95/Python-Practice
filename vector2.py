@@ -34,3 +34,6 @@ class Vector2(object):
         new_vec = Vector2(self.x_pos / self.magnitude,
                           self.y_pos / self.magnitude)
         return new_vec
+		
+	def dot(self, other):
+		return (self.x_pos * other.x_pos) + (self.y_pos * other.y_pos)		
