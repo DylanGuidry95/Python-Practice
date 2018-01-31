@@ -50,4 +50,5 @@ def password_gen(security):
 
     return password
 
-password_gen(3)
+
+password_gen(randint(0,4))
