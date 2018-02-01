@@ -47,8 +47,8 @@ class AStar(object):
                           [1, 1], [-1, -1], [-1, 1], [1, -1]]
         for node in self.world.nodes:
             for pos in valid_neighbor:
-                if (self.current_node.position[0] + pos[0] is node.position[0] and
-                        self.current_node.position[1] + pos[1] is node.position[1] and
+                if (self.current_node.position.x_pos + pos[0] is node.position.x_pos and
+                        self.current_node.position.y_pos + pos[1] is node.position.y_pos and
                         node.traversable and
                         node not in self.closed_list):
                     neighbors.append(node)

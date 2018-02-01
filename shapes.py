@@ -5,7 +5,7 @@
 
 import math
 import pygame
-from vector2 import Vector2
+from A_Star.vector2 import Vector2
 
 class Shape(object):
     '''Base class for drawing all shapes'''

@@ -2,6 +2,7 @@
     Author: Dylan Guidry
     Date: 1/24/2018'''
 from node import Node
+from vector2 import Vector2
 
 class Graph(object):
     '''Class that create and object that represenents a 2D
@@ -16,7 +17,7 @@ class Graph(object):
         should have.'''
         for x in range(0, self.columns):
             for y in range(0, self.rows):
-                self.nodes.append(Node([x, y]))
+                self.nodes.append(Node(Vector2(x,y)))
 
     def display_grid(self):
         '''Prints the position information of each node in the graph'''

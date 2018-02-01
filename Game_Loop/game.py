@@ -13,8 +13,7 @@ class Application(object):
 
     def start(self):
         pygame.init()
-        pygame.display.set_caption("AI for games")
-        pygame.display.set_icon(pygame.image.load("AIE Logo.png"))
+        pygame.display.set_caption(self.app_name)
 
     def update(self):
         for event in pygame.event.get():
@@ -23,11 +22,3 @@ class Application(object):
         if pygame.key.get_pressed()[pygame.K_ESCAPE] != 0:
             return False
         return True
-
-def main():
-    app = Application("test", (1080, 720))
-    app.start()
-    while app.update():
-        pygame.display.flip()
-
-main()

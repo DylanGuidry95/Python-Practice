@@ -36,7 +36,7 @@ class Node(object):
             return True
         else:
             temp_g = node.g_score
-            if self.position[0] is node.position[0] or self.position[1] is node.position[1]:
+            if self.position.x_pos is node.position.x_pos or self.position.y_pos is node.position.y_pos:
                 temp_g += 10
             else:
                 temp_g += 14
@@ -51,15 +51,15 @@ class Node(object):
         movement is diagonal the cost is parent's G score + 14'''
         if self.set_parent(node) is True:
             self.g_score = node.g_score
-            if self.position[0] is node.position[0] or self.position[1] is node.position[1]:
+            if self.position.x_pos is node.position.x_pos or self.position.y_pos is node.position.y_pos:
                 self.g_score += 10
             else:
                 self.g_score += 14
 
     def calculate_h_score(self, goal):
         '''Calculates the estimated movement cost to move from this node to the goal.'''
-        self.h_score = 10 * (abs(goal.position[0] - self.position[0]) +
-                             abs(goal.position[1] - self.position[1]))
+        self.h_score = 10 * (abs(goal.position.x_pos - self.position.x_pos) +
+                             abs(goal.position.y_pos - self.position.y_pos))
 
     def calculate_f_score(self):
         '''Calculates the fscore which is the sum of the H score and G score of the node'''
