@@ -5,11 +5,12 @@ from shapes import Rectangle
 
 class Graph_Visual(object):
     '''Visual representation for a graph of nodes'''
-    def __init__(self, graph, offset, scale):
+    def __init__(self, algorithm, graph, offset, scale):
         self.graph = graph
         self.node_visuals = []
         self.offset = offset
         self.scale = scale
+        self.algorithm = algorithm
 
     def set_up(self, screen):
         '''Ensures all nodes are generated'''
@@ -30,3 +31,7 @@ class Graph_Visual(object):
                 self.node_visuals[self.graph.nodes.index(node)].change_color((255, 0, 0))
             if node.is_start:
                 self.node_visuals[self.graph.nodes.index(node)].change_color((0, 255, 0))
+            if self.algorithm.open_list.__contains__(node):
+                self.node_visuals[self.graph.nodes.index(node)].change_color((255, 0, 255))
+            if self.algorithm.closed_list.__contains__(node):
+                self.node_visuals[self.graph.nodes.index(node)].change_color((150, 150, 255))
