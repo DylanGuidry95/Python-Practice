@@ -62,10 +62,14 @@ class AStar(object):
         self.open_list.append(self.current_node)
         return True
 
-    def update(self):
+    def update(self, start, goal, graph):        
         '''A single step of the algorithm. This fucntion should be called everytime we want
         the algorithm to step through. If the complete condition is met the goal node is returned'''
-        if self.current_node is not self.goal_node:
+        self.world = graph
+        self.start_node = start
+        self.open_list.append(self.start_node)
+        self.goal_node = goal
+        while self.current_node is not self.goal_node:
             self.sort_open_list()
             self.current_node = self.open_list[0]
             self.open_list.remove(self.current_node)
@@ -85,4 +89,4 @@ class AStar(object):
 
     def sort_open_list(self):
         '''Sorts the node in the open list by the F Score from least to greatest'''
-        self.open_list.sort(key=lambda node: node.f_score, reverse=False)
+        self.open_list.sort(key=lambda node: node.f_score)
