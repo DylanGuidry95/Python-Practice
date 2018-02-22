@@ -24,6 +24,9 @@ class Vector2(object):
                           self.y_pos * other)
         return new_vec
 
+    def __eq__(self, other):
+        return self.x_pos == other.x_pos and self.y_pos == other.y_pos
+
     def magnitude(self):
         '''Returns the magnitude of the vector'''
         mag = math.sqrt((self.x_pos + self.x_pos) + (self.y_pos + self.y_pos))

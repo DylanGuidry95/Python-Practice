@@ -68,14 +68,14 @@ class Node(object):
         self.f_score = self.g_score + self.h_score
 
 def get_neighbors(node, graph):    
-    right = (node.position.x_pos + 1, node.position.y_pos)
-    top_right = (node.position.x_pos + 1, node.position.y_pos + 1)
-    top = (node.position.x_pos, node.position.y_pos + 1)
-    top_left = (node.position.x_pos - 1, node.position.y_pos + 1)
-    left = (node.position.x_pos - 1, node.position.y_pos)
-    bottom_left = (node.position.x_pos - 1, node.position.y_pos - 1)
-    bottom = (node.position.x_pos, node.position.y_pos - 1)
-    bottom_right = (node.position.x_pos + 1, node.position.y_pos - 1)
+    right = Vector2(node.position.x_pos + 1, node.position.y_pos)
+    top_right = Vector2(node.position.x_pos + 1, node.position.y_pos + 1)
+    top = Vector2(node.position.x_pos, node.position.y_pos + 1)
+    top_left = Vector2(node.position.x_pos - 1, node.position.y_pos + 1)
+    left = Vector2(node.position.x_pos - 1, node.position.y_pos)
+    bottom_left = Vector2(node.position.x_pos - 1, node.position.y_pos - 1)
+    bottom = Vector2(node.position.x_pos, node.position.y_pos - 1)
+    bottom_right = Vector2(node.position.x_pos + 1, node.position.y_pos - 1)
     directions = [right, top_right, top, top_left,
                   left, bottom_left, bottom, bottom_right]
     neighbors = []
@@ -99,7 +99,7 @@ def correct_test(start, goal, graph):
             break
         neighbors = get_neighbors(current_node, graph)
         for node in neighbors:
-            if not node.traversable or node not in closed_list:
+            if not node.traversable or node in closed_list:
                 continue
             node.calculate_g_score(current_node)
             node.calculate_h_score(goal)
@@ -110,7 +110,7 @@ def correct_test(start, goal, graph):
         path_node = goal
         while path_node is not None:
             path.append(path_node)
-            path = path_node.parent
+            path_node = path_node.parent
     return path
                 
 def shuffle_search_space():
@@ -123,8 +123,11 @@ def shuffle_search_space():
     num_walls = random.randrange(0, 25)
     start_node = graph[rand_start_index]
     goal_node = graph[rand_goal_index]
+    blockers = []
     for counter in range(num_walls):
-        graph[random.randrange(0, 99)].traversable = False
+        blocker = graph[random.randrange(0, 99)]
+        #blocker.traversable = False        
+        blockers.append(blocker)
     return [graph, start_node, goal_node]
 
 def test_function(func):
@@ -136,5 +139,10 @@ def test_function(func):
     result = func(start_node, goal_node, graph)
 
 G = shuffle_search_space()
-ans = correct_test(G[1], G[2], G[0])
+start = G[0][1]
+goal = G[0][41]
+G[0][21].traversable = False
+G[0][20].traversable = False
+G[0][22].traversable = False
+ans = correct_test(start, goal, G[0])
 a = 0
