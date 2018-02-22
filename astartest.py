@@ -105,7 +105,6 @@ def astar(start, goal, graph):
             nay.g = tentative_g
             nay.h = manhattan(nay, goal)
             nay.f = nay.g + nay.h
-
     return path
 
 

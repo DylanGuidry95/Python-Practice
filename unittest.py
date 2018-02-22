@@ -67,6 +67,9 @@ class Node(object):
         '''Calculates the fscore which is the sum of the H score and G score of the node'''
         self.f_score = self.g_score + self.h_score
 
+    def __str__(self):
+        return str.format("<{0},{0}>", self.position.x_pos, self.position.y_pos)
+
 def get_neighbors(node, graph):    
     right = Vector2(node.position.x_pos + 1, node.position.y_pos)
     top_right = Vector2(node.position.x_pos + 1, node.position.y_pos + 1)
@@ -126,23 +129,38 @@ def shuffle_search_space():
     blockers = []
     for counter in range(num_walls):
         blocker = graph[random.randrange(0, 99)]
-        #blocker.traversable = False        
+        blocker.traversable = False        
         blockers.append(blocker)
-    return [graph, start_node, goal_node]
+    return [graph, start_node, goal_node, blockers]
 
 def test_function(func):
     test_case = shuffle_search_space()
     graph = test_case[0]
     start_node = test_case[1]
     goal_node = test_case[2]
-
+    blockers = []
+    for node in test_case[3]:
+        blockers.append(str(node))
     result = func(start_node, goal_node, graph)
+    correct = correct_test(start_node, goal_node, graph)
+    line = str.format("start::{0} goal::{0} walls::{0}\n", start_node, goal_node, blockers)
+    line2 = str.format("Expected Result:: {0}\nActual Result:: {0}", correct, result)
+    print line, line2    
+    if len(result) != len(correct):
+        print "Fail Test"
+        return 0
+    for i in range(len(result)):
+        if result[i].position != correct[i].position:
+            print "Fail Test"
+            return 0
+    print "Pass Test"
+    return 1
 
-G = shuffle_search_space()
-start = G[0][1]
-goal = G[0][41]
-G[0][21].traversable = False
-G[0][20].traversable = False
-G[0][22].traversable = False
-ans = correct_test(start, goal, G[0])
+test = AStar(Graph(10,10))
+count = 0
+for i in range(5):
+    G = shuffle_search_space()
+    test_function(test.update)
+    count = count + 1
+print count
 a = 0

@@ -69,13 +69,15 @@ class AStar(object):
         self.start_node = start
         self.open_list.append(self.start_node)
         self.goal_node = goal
-        while self.current_node is not self.goal_node:
+        while self.goal_node not in self.closed_list or len(self.open_list) == 0:
             self.sort_open_list()
+            if len(self.open_list) == 0:
+                break
             self.current_node = self.open_list[0]
             self.open_list.remove(self.current_node)
             self.closed_list.append(self.current_node)
             if self.goal_node in self.closed_list:
-                return self.goal_node
+                break
             neighbors = self.get_neighbors()
             for node in neighbors:
                 node.calculate_g_score(self.current_node)
@@ -85,7 +87,13 @@ class AStar(object):
                     self.open_list.append(node)
                 else:
                     node.set_parent(self.current_node)
-        return None
+        path = []
+        if self.closed_list.__contains__(self.goal_node):
+            path_node = self.goal_node
+            while path_node is not None:
+                path.append(path_node)
+                path_node = path_node.parent
+        return path
 
     def sort_open_list(self):
         '''Sorts the node in the open list by the F Score from least to greatest'''
