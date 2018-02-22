@@ -23,3 +23,7 @@ class Graph(object):
         '''Prints the position information of each node in the graph'''
         for node in self.nodes:
             print str(node.position[0]) + "," + str(node.position[1])
+
+    def __getitem__(self, key):
+        '''returns the item at the key in the list nodes'''
+        return self.nodes[key]
