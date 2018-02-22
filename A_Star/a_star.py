@@ -45,7 +45,7 @@ class AStar(object):
         neighbors = []
         valid_neighbor = [[0, 1], [1, 0], [0, -1], [-1, 0],
                           [1, 1], [-1, -1], [-1, 1], [1, -1]]
-        for node in self.world.nodes:
+        for node in self.world:
             for pos in valid_neighbor:
                 if (self.current_node.position.x_pos + pos[0] is node.position.x_pos and
                         self.current_node.position.y_pos + pos[1] is node.position.y_pos and
