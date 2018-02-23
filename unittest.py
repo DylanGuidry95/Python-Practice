@@ -3,6 +3,7 @@ from A_Star.a_star import AStar
 from A_Star.vector2 import Vector2
 import random
 
+#DO NOT MODIFY
 class Node(object):
     '''Class that will be used to create node objects. These objects
     will be used in the path finding algorithm known as A_Star'''
@@ -70,7 +71,9 @@ class Node(object):
     def __str__(self):
         return str.format("<{0},{1}>", self.position.x_pos, self.position.y_pos)
 
-def get_neighbors(node, graph):    
+def get_neighbors(node, graph):
+    '''Gets the neighbors of the node. Used to generate the correct path for the user to
+    test against'''
     right = Vector2(node.position.x_pos + 1, node.position.y_pos)
     top_right = Vector2(node.position.x_pos + 1, node.position.y_pos + 1)
     top = Vector2(node.position.x_pos, node.position.y_pos + 1)
@@ -89,6 +92,7 @@ def get_neighbors(node, graph):
     return neighbors
 
 def correct_test(start, goal, graph):
+    '''Geneartes the correct path that the users algorithm will be tested against'''
     open_list = []
     closed_list = []
     current_node = start
@@ -115,12 +119,13 @@ def correct_test(start, goal, graph):
             path.append(path_node)
             path_node = path_node.parent
     return path
-                
+ 
 def shuffle_search_space():
+    '''Generates the search space to test the algorithm in'''
     graph = []
-    for x in range(10):
-        for y in range(10):
-            graph.append(Node(Vector2(x,y)))
+    for x_pos in range(10):
+        for y_pos in range(10):
+            graph.append(Node(Vector2(x_pos, y_pos)))
     rand_start_index = random.randrange(0, 99)
     rand_goal_index = random.randrange(0, 99)
     num_walls = random.randrange(0, 25)
@@ -129,11 +134,15 @@ def shuffle_search_space():
     blockers = []
     for counter in range(num_walls):
         blocker = graph[random.randrange(0, 99)]
-        blocker.traversable = False        
+        blocker.traversable = False
         blockers.append(blocker)
     return [graph, start_node, goal_node, blockers]
 
 def test_function(func):
+    '''Pass in the function you wish to test. Function must take in three arguments.
+    First argument is the start node.
+    Second Argument is the goal node.
+    Thrid Argument is the search space'''
     test_case = shuffle_search_space()
     graph = test_case[0]
     start_node = test_case[1]
@@ -150,9 +159,10 @@ def test_function(func):
         str_result = str_result + str(node)
     for node in correct:
         str_correct = str_correct + str(node)
-    line = str.format("start::{0} goal::{1} walls::{2}\n", str(start_node), str(goal_node), str_blockers)
+    line = str.format("start::{0} goal::{1} walls::{2}\n", str(start_node),
+                      str(goal_node), str_blockers)
     line2 = str.format("Expected Result:: {0}\nActual Result:: {1}", str_correct, str_result)
-    print line, line2    
+    print line, line2
     if len(result) != len(correct):
         print "Fail Test"
         return 0
@@ -162,14 +172,17 @@ def test_function(func):
             return 0
     print "Pass Test"
     return 1
+#DO NOT MODIFY
 
-test = AStar(Graph(10,10))
-count = 0
-num_passed = 0
-num_test = 3
-for i in range(num_test):
-    G = shuffle_search_space()
-    verdict = test_function(test.update)    
-    num_passed = num_passed + verdict
-print str.format("Number of Test::{0} Number Passed::{1}", num_test, num_passed)
-a = 0
+def main():
+    '''the main'''
+    test = AStar(Graph(10, 10))
+    num_passed = 0
+    num_test = 3
+    for i in range(num_test):
+        G = shuffle_search_space()
+        verdict = test_function(test.update)
+        num_passed = num_passed + verdict
+    print str.format("Number of Test::{0} Number Passed::{1}", num_test, num_passed)
+
+main()
