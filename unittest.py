@@ -68,7 +68,7 @@ class Node(object):
         self.f_score = self.g_score + self.h_score
 
     def __str__(self):
-        return str.format("<{0},{0}>", self.position.x_pos, self.position.y_pos)
+        return str.format("<{0},{1}>", self.position.x_pos, self.position.y_pos)
 
 def get_neighbors(node, graph):    
     right = Vector2(node.position.x_pos + 1, node.position.y_pos)
@@ -138,13 +138,20 @@ def test_function(func):
     graph = test_case[0]
     start_node = test_case[1]
     goal_node = test_case[2]
-    blockers = []
-    for node in test_case[3]:
-        blockers.append(str(node))
+    blockers = test_case[3]
     result = func(start_node, goal_node, graph)
     correct = correct_test(start_node, goal_node, graph)
-    line = str.format("start::{0} goal::{0} walls::{0}\n", start_node, goal_node, blockers)
-    line2 = str.format("Expected Result:: {0}\nActual Result:: {0}", correct, result)
+    str_blockers = ""
+    str_correct = ""
+    str_result = ""
+    for node in blockers:
+        str_blockers = str_blockers + str(node)
+    for node in result:
+        str_result = str_result + str(node)
+    for node in correct:
+        str_correct = str_correct + str(node)
+    line = str.format("start::{0} goal::{1} walls::{2}\n", str(start_node), str(goal_node), str_blockers)
+    line2 = str.format("Expected Result:: {0}\nActual Result:: {1}", str_correct, str_result)
     print line, line2    
     if len(result) != len(correct):
         print "Fail Test"
@@ -158,9 +165,11 @@ def test_function(func):
 
 test = AStar(Graph(10,10))
 count = 0
-for i in range(5):
+num_passed = 0
+num_test = 3
+for i in range(num_test):
     G = shuffle_search_space()
-    test_function(test.update)
-    count = count + 1
-print count
+    verdict = test_function(test.update)    
+    num_passed = num_passed + verdict
+print str.format("Number of Test::{0} Number Passed::{1}", num_test, num_passed)
 a = 0
