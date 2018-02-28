@@ -111,7 +111,11 @@ def correct_test(start, goal, graph):
             node.calculate_g_score(current_node)
             node.calculate_h_score(goal)
             node.calculate_f_score()
-            open_list.append(node)
+            if open_list.__contains__(node):
+               continue
+           open_list.append(node)
+       if len(open_list) == 0:
+           return []
     path = []
     if closed_list.__contains__(goal):
         path_node = goal
