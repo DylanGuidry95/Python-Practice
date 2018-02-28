@@ -43,7 +43,7 @@ class Node(object):
                 temp_g += 10
             else:
                 temp_g += 14
-            if temp_g < self.g_score:
+            if temp_g <= self.g_score:
                 self.parent = node
                 self.g_score = temp_g
             return False
@@ -51,7 +51,7 @@ class Node(object):
     def calculate_g_score(self, node):
         '''Calculates the movement cost to move from nodes parent to it self. If the
         movement is horizontal or vertical the cost is parent's G score + 10. If the
-        movement is diagonal the cost is parent's G score + 14'''
+        movement is diagonal the cost is parent's G score + 14'''        
         if self.set_parent(node) is True:
             self.g_score = node.g_score
             if self.position.x_pos is node.position.x_pos or self.position.y_pos is node.position.y_pos:
@@ -61,7 +61,7 @@ class Node(object):
 
     def calculate_h_score(self, goal):
         '''Calculates the estimated movement cost to move from this node to the goal.'''
-        self.h_score = 10 * (abs(goal.position.x_pos - self.position.x_pos) +
+        self.h_score = (abs(goal.position.x_pos - self.position.x_pos) +
                              abs(goal.position.y_pos - self.position.y_pos))
 
     def calculate_f_score(self):
@@ -97,31 +97,29 @@ def correct_test(start, goal, graph):
     closed_list = []
     current_node = start
     open_list.append(current_node)
-    while goal not in closed_list or open_list.count == 0:
+    path = []
+    while open_list:
         open_list.sort(key=lambda node: node.f_score)
         current_node = open_list[0]
         open_list.remove(current_node)
         closed_list.append(current_node)
-        if closed_list.__contains__(goal):
-            break
+        if current_node is goal:
+                if closed_list.__contains__(goal):
+                    path_node = goal
+                    while path_node is not None:
+                        path.append(path_node)
+                        path_node = path_node.parent
+                    return path
         neighbors = get_neighbors(current_node, graph)
         for node in neighbors:
-            if not node.traversable or node in closed_list:
+            if not node.traversable or closed_list.__contains__(node):
                 continue
             node.calculate_g_score(current_node)
             node.calculate_h_score(goal)
             node.calculate_f_score()
             if open_list.__contains__(node):
-               continue
-           open_list.append(node)
-       if len(open_list) == 0:
-           return []
-    path = []
-    if closed_list.__contains__(goal):
-        path_node = goal
-        while path_node is not None:
-            path.append(path_node)
-            path_node = path_node.parent
+                continue
+            open_list.append(node)
     return path
  
 def shuffle_search_space():
@@ -138,8 +136,8 @@ def shuffle_search_space():
     blockers = []
     for counter in range(num_walls):
         blocker = graph[random.randrange(0, 99)]
-        blocker.traversable = False
-        blockers.append(blocker)
+        #blocker.traversable = False
+        #blockers.append(blocker)
     return [graph, start_node, goal_node, blockers]
 
 def test_function(func):
@@ -149,9 +147,12 @@ def test_function(func):
     Thrid Argument is the search space'''
     test_case = shuffle_search_space()
     graph = test_case[0]
-    start_node = test_case[1]
-    goal_node = test_case[2]
-    blockers = test_case[3]
+    start_node = graph[68]  
+    goal_node = graph[72]
+    blockers = [graph[47], graph[2], graph[19], graph[50], graph[62], graph[50], graph[43],
+    graph[14], graph[87], graph[13]]
+    for node in blockers:
+        node.traversable = False
     result = func(start_node, goal_node, graph)
     correct = correct_test(start_node, goal_node, graph)
     str_blockers = ""
@@ -182,7 +183,7 @@ def main():
     '''the main'''
     test = AStar(Graph(10, 10))
     num_passed = 0
-    num_test = 3
+    num_test = 10
     for i in range(num_test):
         G = shuffle_search_space()
         verdict = test_function(test.update)
