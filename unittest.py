@@ -62,7 +62,7 @@ class Node(object):
     def calculate_h_score(self, goal):
         '''Calculates the estimated movement cost to move from this node to the goal.'''
         self.h_score = (abs(goal.position.x_pos - self.position.x_pos) +
-                             abs(goal.position.y_pos - self.position.y_pos))
+                             abs(goal.position.y_pos - self.position.y_pos)) * 10
 
     def calculate_f_score(self):
         '''Calculates the fscore which is the sum of the H score and G score of the node'''
