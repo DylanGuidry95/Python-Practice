@@ -13,6 +13,7 @@ class AStar(object):
         self.open_list = []
         self.closed_list = []
         self.current_node = None
+        self.path = []
 
     def set_start_node(self, start):
         '''Sets the value of the start node for the algorithm'''
@@ -87,13 +88,13 @@ class AStar(object):
                     self.open_list.append(node)
                 else:
                     node.set_parent(self.current_node)
-        path = []
+        self.path = []
         if self.closed_list.__contains__(self.goal_node):
             path_node = self.goal_node
             while path_node is not None:
-                path.append(path_node)
+                self.path.append(path_node)
                 path_node = path_node.parent
-        return path
+        return self.path
 
     def sort_open_list(self):
         '''Sorts the node in the open list by the F Score from least to greatest'''

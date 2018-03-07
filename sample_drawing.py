@@ -1,5 +1,6 @@
 import pygame
 from shapes import Rectangle
+from shapes import Line
 from A_Star.node import Node
 from A_Star.graph import Graph
 from A_Star.vector2 import Vector2
@@ -10,8 +11,13 @@ class NodeVisual(object):
         self.node = node
         self.shape = Rectangle(draw_pos, (255, 255, 255), scale, draw_surface)
 
-    def draw(self):
+    def draw(self, graph_visual):
         self.shape.draw()
+        if self.node.parent is not None:
+            par = graph_visual.get_visual(self.node.parent)
+            line = pygame.draw.lines(self.shape.draw_surface, (0,255,0), True, 
+            [[self.shape.position.x_pos + self.shape.scale[0] / 2, self.shape.position.y_pos + self.shape.scale[1] / 2],
+            [par.shape.position.x_pos + par.shape.scale[0] / 2, par.shape.position.y_pos + par.shape.scale[1] / 2]])
 
 class GraphVisual(object):
     def __init__(self, graph, node_offset, draw_Surface):
@@ -33,7 +39,7 @@ class GraphVisual(object):
 
     def draw(self):
         for node in self.node_visuals:
-            node.draw()
+            node.draw(self)
 
     def get_visual(self, node):
         for node_visual in self.node_visuals:
@@ -54,10 +60,22 @@ class A_StarVisual(object):
                 visual.shape.change_color((255, 0, 0))
 
     def draw_closed(self):
-            for node in self.algorithm.closed_list:
-                visual = self.graph_visual.get_visual(node)
-                if visual is not None:
-                    visual.shape.change_color((0, 255, 0))
+        for node in self.algorithm.closed_list:
+            visual = self.graph_visual.get_visual(node)
+            if visual is not None:
+                visual.shape.change_color((0, 255, 0))
+    
+    def draw_path(self):
+        for node in self.algorithm.path:
+            visual = self.graph_visual.get_visual(node)
+            if visual is not None:
+                visual.shape.change_color((255, 0, 255))
+
+    def draw_start_goal(self):
+        start_visual = self.graph_visual.get_visual(self.algorithm.start_node)
+        goal_visual = self.graph_visual.get_visual(self.algorithm.goal_node)
+        start_visual.shape.change_color((150,255,150))
+        goal_visual.shape.change_color((150,150,255))
 
 pygame.init()
 
@@ -75,10 +93,8 @@ GV.gen_visual_nodes()
 AV = A_StarVisual(A,SCREEN)
 AV.draw_open()
 AV.draw_closed()
-for node in path:    
-    if GV.get_visual(node):
-        n = GV.get_visual(node)
-        n.shape.change_color((255, 0, 255))
+AV.draw_path()
+AV.draw_start_goal()
 RUNNING = True
 while RUNNING:
     for event in pygame.event.get():
@@ -88,4 +104,5 @@ while RUNNING:
 
     AV.graph_visual.draw()
 
+    pygame.display.update()
     pygame.display.flip()
