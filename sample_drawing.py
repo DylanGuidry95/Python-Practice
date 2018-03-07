@@ -3,16 +3,17 @@ from shapes import Rectangle
 from A_Star.node import Node
 from A_Star.graph import Graph
 from A_Star.vector2 import Vector2
+from A_Star.a_star import AStar
 
 class NodeVisual(object):
     def __init__(self, node, draw_pos, scale, draw_surface):
         self.node = node
-        self.shape = Rectangle(draw_pos, (1, 1, 1), scale, draw_surface)
+        self.shape = Rectangle(draw_pos, (255, 255, 255), scale, draw_surface)
 
     def draw(self):
         self.shape.draw()
 
-class GrpahVisual(object):
+class GraphVisual(object):
     def __init__(self, graph, node_offset, draw_Surface):
         self.graph = graph
         self.node_offset = node_offset
@@ -25,6 +26,8 @@ class GrpahVisual(object):
             for y in range(0, self.graph.rows * self.node_offset, self.node_offset):                  
                 new_node = NodeVisual(self.graph[count], Vector2(x, y), 
                                       [25,25], self.draw_surface)
+                if not new_node.node.traversable:
+                    new_node.shape.change_color((100, 100, 100))
                 self.node_visuals.append(new_node)               
                 count += 1                       
 
@@ -32,21 +35,57 @@ class GrpahVisual(object):
         for node in self.node_visuals:
             node.draw()
 
+    def get_visual(self, node):
+        for node_visual in self.node_visuals:
+            if node_visual.node == node:
+                return node_visual
+        return None
+
+class A_StarVisual(object):
+    def __init__(self, AStar, surface):
+        self.algorithm = AStar
+        self.graph_visual = GraphVisual(self.algorithm.world, 30, surface)
+        self.graph_visual.gen_visual_nodes()
+
+    def draw_open(self):
+        for node in self.algorithm.open_list:
+            visual = self.graph_visual.get_visual(node)
+            if visual is not None:
+                visual.shape.change_color((255, 0, 0))
+
+    def draw_closed(self):
+            for node in self.algorithm.closed_list:
+                visual = self.graph_visual.get_visual(node)
+                if visual is not None:
+                    visual.shape.change_color((0, 255, 0))
+
 pygame.init()
 
 SCREEN = pygame.display.set_mode((1080, 720))
-SCREEN.fill((255, 255, 255))
+SCREEN.fill((0, 0, 0))
 
-G = Graph(25,25)
+G = Graph(10,10)
 G.generate_nodes()
-GV = GrpahVisual(G, 30, SCREEN)
+G[11].traversable = False
+G[1].traversable = False
+A = AStar(G)
+path = A.update(G[0], G[99], G)
+GV = GraphVisual(G, 30, SCREEN)
 GV.gen_visual_nodes()
-
+AV = A_StarVisual(A,SCREEN)
+AV.draw_open()
+AV.draw_closed()
+for node in path:    
+    if GV.get_visual(node):
+        n = GV.get_visual(node)
+        n.shape.change_color((255, 0, 255))
 RUNNING = True
 while RUNNING:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             RUNNING = False
-    GV.draw()
+    
+
+    AV.graph_visual.draw()
 
     pygame.display.flip()
