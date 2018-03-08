@@ -10,14 +10,29 @@ class NodeVisual(object):
     def __init__(self, node, draw_pos, scale, draw_surface):
         self.node = node
         self.shape = Rectangle(draw_pos, (255, 255, 255), scale, draw_surface)
+        self.is_hoovered = False
 
     def draw(self, graph_visual):
-        self.shape.draw()
+        self.node_clicked()
+        self.shape.draw()        
         if self.node.parent is not None:
             par = graph_visual.get_visual(self.node.parent)
             line = pygame.draw.lines(self.shape.draw_surface, (0,255,0), True, 
             [[self.shape.position.x_pos + self.shape.scale[0] / 2, self.shape.position.y_pos + self.shape.scale[1] / 2],
             [par.shape.position.x_pos + par.shape.scale[0] / 2, par.shape.position.y_pos + par.shape.scale[1] / 2]])
+
+    def node_clicked(self):
+        mouse_position = pygame.mouse.get_pos()
+        if(mouse_position[0] >= self.shape.position.x_pos - self.shape.scale[0] / 2 and 
+            mouse_position[0] <= self.shape.position.x_pos + self.shape.scale[0] / 2 and
+            mouse_position[1] >= self.shape.position.y_pos - self.shape.scale[1] / 2 and 
+            mouse_position[1] <= self.shape.position.y_pos + self.shape.scale[1] / 2):
+           self.shape.change_color((150, 50, 200))
+           self.is_hoovered = True
+        else:            
+            self.is_hoovered = False
+
+
 
 class GraphVisual(object):
     def __init__(self, graph, node_offset, draw_Surface):
@@ -57,25 +72,40 @@ class A_StarVisual(object):
         for node in self.algorithm.open_list:
             visual = self.graph_visual.get_visual(node)
             if visual is not None:
-                visual.shape.change_color((255, 0, 0))
+                if not visual.is_hoovered:
+                    visual.shape.change_color((255, 0, 0))
 
     def draw_closed(self):
         for node in self.algorithm.closed_list:
             visual = self.graph_visual.get_visual(node)
             if visual is not None:
-                visual.shape.change_color((0, 255, 0))
+                if not visual.is_hoovered:
+                    visual.shape.change_color((0, 255, 0))
     
     def draw_path(self):
         for node in self.algorithm.path:
             visual = self.graph_visual.get_visual(node)
             if visual is not None:
-                visual.shape.change_color((255, 0, 255))
+                if not visual.is_hoovered:
+                    visual.shape.change_color((255, 0, 255))
 
     def draw_start_goal(self):
         start_visual = self.graph_visual.get_visual(self.algorithm.start_node)
         goal_visual = self.graph_visual.get_visual(self.algorithm.goal_node)
         start_visual.shape.change_color((150,255,150))
         goal_visual.shape.change_color((150,150,255))
+
+class Application(object):
+    def __init__(self, step_delay, algorithm):
+        pygame.init()
+        self.step_delay = step_delay
+        self.algorithm = algorithm
+        self.screen = pygame.display.set_mode((1080, 720))    
+        self.algorithm_visual = A_StarVisual(self.algorithm)
+
+    def start(self):
+        self.screen.fill((0, 0, 0))    
+
 
 pygame.init()
 
@@ -101,7 +131,10 @@ while RUNNING:
         if event.type == pygame.QUIT:
             RUNNING = False
     
-
+    AV.draw_open()
+    AV.draw_closed()
+    AV.draw_path()
+    AV.draw_start_goal()
     AV.graph_visual.draw()
 
     pygame.display.update()
