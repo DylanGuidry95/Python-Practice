@@ -63,13 +63,12 @@ class AStar(object):
         self.open_list.append(self.current_node)
         return True
 
-    def update(self, start, goal, graph):        
+    def update(self):        
         '''A single step of the algorithm. This fucntion should be called everytime we want
         the algorithm to step through. If the complete condition is met the goal node is returned'''
-        self.world = graph
-        self.start_node = start
+        self.open_list = []
+        self.closed_list = []
         self.open_list.append(self.start_node)
-        self.goal_node = goal
         while self.goal_node not in self.closed_list or len(self.open_list) == 0:
             self.sort_open_list()
             if len(self.open_list) == 0:

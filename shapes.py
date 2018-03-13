@@ -13,6 +13,7 @@ class Shape(object):
         self.position = pos
         self.color = col
         self.draw_surface = surface
+        self.pygame_object = None
 
     def change_color(self, col):
         '''Allows the changing of the shapes color without accessing
@@ -21,14 +22,17 @@ class Shape(object):
 
 class Rectangle(Shape):
     '''Class that will allow the user to draw a rectangle to the screen'''
-    def __init__(self, pos, col, scale, surface):
+    def __init__(self, pos, col, scale, surface, width):
         Shape.__init__(self, pos, col, surface)
         self.scale = scale
+        self.width =width
+        self.rect = pygame.rect.Rect((self.position.x_pos, self.position.y_pos,
+                                      self.scale[0], self.scale[1]))
 
     def draw(self):
         '''Draws a rectangle to the screen based on the properties the user declared'''
-        pygame.draw.rect(self.draw_surface, (self.color[0], self.color[1], self.color[2]),
-                         (self.position.x_pos, self.position.y_pos, self.scale[0], self.scale[1]))
+        self.pygame_object = pygame.draw.rect(self.draw_surface, (self.color[0], self.color[1], self.color[2]),
+                         (self.position.x_pos, self.position.y_pos, self.scale[0], self.scale[1]), self.width)
 
 class Circle(Shape):
     '''Class that will allow the user to draw a circle to the screen'''
@@ -91,3 +95,8 @@ class Text(Shape):
         '''Draws text to the screen based on the properties the user declared'''
         render = self.font.render(self.text, 0, (self.color[0], self.color[1], self.color[2]))
         self.draw_surface.blit(render, (self.position.x_pos, self.position.y_pos))
+
+    def draw_on_surface(self, rect):
+        '''Draws text to the screen based on the properties the user declared'''
+        render = self.font.render(self.text, 0, (self.color[0], self.color[1], self.color[2]))
+        self.draw_surface.blit(render, (rect[0] + self.position.x_pos, rect[1] + self.position.y_pos))
