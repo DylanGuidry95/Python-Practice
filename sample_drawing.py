@@ -1,3 +1,8 @@
+'''File: sample_drawing.py
+   Author: Dylan Guidry
+   Date: 3/14/2018'''
+#pylint: disable=E1101
+
 import pygame
 from shapes import Rectangle
 from shapes import Line
@@ -9,18 +14,21 @@ from A_Star.a_star import AStar
 
 class NodeVisual(object):
     def __init__(self, node, draw_pos, scale, draw_surface):
-        self.node = node
-        self.shape = Rectangle(draw_pos, (255, 255, 255), scale, draw_surface, 0)
-        self.is_hoovered = False
-        self.is_start = False
-        self.is_goal = False
-        self.is_path = False
-        self.is_open = False
-        self.is_closed = False
-        self.show_scores = False
-        self.border = Rectangle(draw_pos,(255, 255, 255), scale, draw_surface, 4)
+        '''Initializes the visual node. The node argument is the a_star node that we will be
+        polling property information from.'''
+        self.node = node #A_Star node
+        self.shape = Rectangle(draw_pos, (255, 255, 255), scale, draw_surface, 0) #Visual drawn to the screen
+        self.is_hoovered = False #True if the mouse is hoovering over the node
+        self.is_start = False #True if the node is the starting node of the algorithm
+        self.is_goal = False #True if the node is the goal node of the algorithm
+        self.is_path = False #True if the node is part of the algorithm path
+        self.is_open = False #True if the node is in the open list
+        self.is_closed = False #True if the node is in the closed list
+        self.show_scores = False #Toggles the node scores to be drawn to the screen
+        self.border = Rectangle(draw_pos,(255, 255, 255), scale, draw_surface, 4) #Highlight border for when the mouse is over the node
 
     def update(self, events):
+        '''Handles all the bevhavious and color changes of the visual node'''
         self.node_clicked(events)                
         if not self.node.traversable:
             self.shape.change_color((0, 0, 0))
@@ -40,19 +48,24 @@ class NodeVisual(object):
             self.border.change_color((0, 0, 0))
             
     def reset_node(self):
+        '''Resets the node to its initial state'''
         self.is_closed = False
         self.is_open = False
         self.is_path = False
         self.node.parent = None
 
     def draw(self, graph_visual):
+        '''All the drawing behaviours for the visual node'''
         self.shape.draw()
-        self.border.draw()        
+        self.border.draw()
+        #If the nodes has a parent we will draw a line from the parent to this node        
         if self.node.parent is not None:
             par = graph_visual.get_visual(self.node.parent)
             line = pygame.draw.lines(self.shape.draw_surface, (0,255,0), True, 
             [[self.shape.position.x_pos + self.shape.scale[0] / 2, self.shape.position.y_pos + self.shape.scale[1] / 2],
             [par.shape.position.x_pos + par.shape.scale[0] / 2, par.shape.position.y_pos + par.shape.scale[1] / 2]], 1)
+        #Drawing of the text to the screen
+        #Will only draw if the node was used in the algorithm and show_scores is true
         if (self.is_open or self.is_closed or self.is_goal or self.is_start) and self.show_scores:
             text = Text(Vector2(5,5), (0,0,0), str(self.node.f_score), 12 , self.shape.draw_surface)
             text.draw_on_surface(self.shape.rect)
@@ -62,6 +75,8 @@ class NodeVisual(object):
             text3.draw_on_surface(self.shape.rect)
 
     def node_clicked(self, events):
+        '''Click behaviour for the visual node. Highlights the node if it is being hoovered.
+        Also if the mouse was clicked while it was hoovered it will make the node not traversable'''
         mouse_position = pygame.mouse.get_pos()
         if self.shape.rect.collidepoint(mouse_position):
             self.is_hoovered = True
@@ -116,6 +131,9 @@ class A_StarVisual(object):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
+                    pygame.mixer.pre_init(44100, -16, 2, 2048)                    
+                    pygame.mixer.music.load("bobross-brush-clean.mp3")
+                    pygame.mixer.music.play()
                     self.clear_nodes()
                     self.algorithm.update()
                 if event.key == pygame.K_TAB:
@@ -187,6 +205,10 @@ class Application(object):
         self.algorithm_visual = A_StarVisual(self.algorithm, self.screen)
         self.running = True
         self.events = None
+        pygame.mixer.init()
+        pygame.mixer.pre_init(44100, -16, 2, 2048)
+        #pygame.mixer.music.load("C:\Users\dylan.guidry\Documents\GitHub\Python-Practice\If this is your first time with us....mp3")
+        #pygame.mixer.music.play()
 
     def update(self):
         while self.running:
@@ -198,6 +220,7 @@ class Application(object):
                     self.running = False
             self.algorithm_visual.update(self.events)
             self.draw()
+
 
     def draw(self):
         self.algorithm_visual.draw()
