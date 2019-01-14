@@ -1,3 +1,3 @@
 @ECHO Off
-C:\Python27\python.exe main.py
+C:\Python27\python.exe Practice/main.py
 PAUSE
