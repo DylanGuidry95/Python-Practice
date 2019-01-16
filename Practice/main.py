@@ -1,11 +1,7 @@
-import pygame
+'''Main File'''
+from Application import Application
 
-(width, height) = (300,300)
-screen = pygame.display.set_mode((width, height))
-pygame.display.flip()
+APP = Application(300,300)
+APP.set_background_color([255,255,255])
 
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+APP.update()
