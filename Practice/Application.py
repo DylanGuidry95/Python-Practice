@@ -2,6 +2,7 @@
 import pygame
 from Drawing import Rectangle
 from Vector2 import Vector2
+from Vector2 import Rect
 
 class Application(object):
     def __init__(self, width, height):
@@ -26,7 +27,14 @@ class Application(object):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-            shape.draw()                    
+                 
+            mouse_pos = Vector2(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[0])
+            mouse_rect = Rect(mouse_pos, Vector2(1,1))
+            if shape.rect.is_point_collision(mouse_pos):
+                shape.color = [0,255,0]
+            else:
+                shape.color = [255,255,255]
+            shape.draw()               
             pygame.display.flip()
 
 

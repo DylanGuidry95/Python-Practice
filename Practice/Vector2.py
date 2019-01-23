@@ -17,6 +17,6 @@ class Rect(object):
 
     def is_point_collision(self, position):
         return self.rect.collidepoint(position.x_pos, position.y_pos)
-        
+
     def is_rect_collision(self, rect):
-        return self.rect.comntains(rect)
+        return self.rect.contains(rect.rect)
