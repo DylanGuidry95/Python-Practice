@@ -3,47 +3,47 @@ import pygame
 from Drawing import Rectangle
 from Vector2 import Vector2
 from Vector2 import Rect
+from board import Board
+from VisualBoard import VisualBoard
 
 class Application(object):
     def __init__(self, width, height):
         '''Constructor'''
         self.width = width
         self.height = height
-        self.backgroun_color = [0,0,0]
+        self.background_color = [0, 0, 0]
         self.screen = pygame.display.set_mode((self.width, self.height))
+        self.delta_time = 0.0
         self.prev_time = 0.0
-        self.time_between = 0.0
         self.running = True
+        self.board = Board(25, 25)
+        self.board_visual = VisualBoard(self.screen, self.board)
         pygame.init()
         pygame.display.init()
-        
+
 
     def set_background_color(self, color):
         '''Changes the background color of window'''
         self.backgroun_color = color
-        self.screen.fill(self.backgroun_color)
-        pygame.display.flip()
+        self.screen.fill(self.background_color)
 
     def update(self):
-        '''Invoked every frame of the application'''
-        shape = Rectangle(self.screen, [255,255,255], Vector2(150,150), 25,25)
+        '''Invoked every frame of the application'''              
         while self.running:
+            #Refresh BackGround
+            self.set_background_color(self.background_color)
+
+            #Delta Time Calc
             current_time = pygame.time.get_ticks()
-            self.time_between = self.prev_time - current_time
-            print(self.time_between)
-            self.total_time = current_time
+            self.delta_time = (current_time - self.prev_time) / 60.0
+            self.prev_time = current_time
+
+            #Event Polling
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.running = False
-                if pygame.key.get_pressed()[pygame.K_w]:
-                    shape.position = shape.position + (Vector2(0,10) * self.time_between)
-            mouse_pos = Vector2(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[0])
-            mouse_rect = Rect(mouse_pos, Vector2(1,1))
-            if shape.rect.is_point_collision(mouse_pos):
-                shape.change_color([0,255,0])
-            else:
-                shape.change_color([255,255,255])
-            shape.draw()               
-            pygame.display.flip()            
+                    self.running = False                
 
+            self.board_visual.draw()
 
+            #Update screen            
+            pygame.display.flip()
